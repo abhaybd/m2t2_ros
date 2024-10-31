@@ -18,7 +18,7 @@ from m2t2_model import M2T2Model
 
 def get_args():
     parser = argparse.ArgumentParser(description='M2T2 ROS Service')
-    parser.add_argument("config", default="config.yaml")
+    parser.add_argument("-c", "--config", default="config.yaml")
     return parser.parse_args()
 
 def main():
@@ -35,12 +35,15 @@ def main():
         pos, quat = req.cam_pose.position, req.cam_pose.orientation
         cam_pose[:3,:3] = scipyR.from_quat([quat.x, quat.y, quat.z, quat.w]).as_matrix()
         cam_pose[:3,-1] = [pos.x, pos.y, pos.z]
-        
-        cam_intrinsics = np.array([req.cam_intrinsics]).reshape(3, 3)
+
+        cam_intrinsics = np.array(req.cam_intrinsics).reshape(3, 3)
         depth = bridge.imgmsg_to_cv2(req.depth, desired_encoding="passthrough")
         rgb = bridge.imgmsg_to_cv2(req.rgb, desired_encoding="rgb8")
         m2t2.cam_intrinsics = cam_intrinsics
         grasps, conf = m2t2.generate_grasps(cam_pose, depth, rgb)
+
+        # transform grasps back into depth frame
+        grasps = np.linalg.inv(cam_pose) @ grasps
 
         res = GraspPredictionResponse()
         res.candidates.header.stamp = req.depth.header.stamp

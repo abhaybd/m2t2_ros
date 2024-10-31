@@ -120,7 +120,7 @@ eval:
     checkpoint: 'm2t2.pth'
     mask_thresh: 0.4
     object_thresh: 0.4
-    num_runs: 2
+    num_runs: 5
     world_coord: True
     surface_range: 0.02
     placement_height: 0.02

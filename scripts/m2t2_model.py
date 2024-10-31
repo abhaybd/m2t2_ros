@@ -61,8 +61,8 @@ class M2T2Model(object):
                 for k in ["grasps", "grasp_confidence", "grasp_contacts"]:
                     outputs[k].extend(out[k][0])
 
-        grasps = torch.cat(outputs["grasps"], dim=0).cpu().numpy()
-        conf = torch.cat(outputs["grasp_confidence"], dim=0).cpu().numpy()
+        pred_grasps = torch.cat(outputs["grasps"], dim=0).cpu().numpy()
+        pred_conf = torch.cat(outputs["grasp_confidence"], dim=0).cpu().numpy()
 
         if visualize:
             vis = create_visualizer()
@@ -90,4 +90,4 @@ class M2T2Model(object):
                         grasp, color, linewidth=0.2
                     )
 
-        return grasps, conf
+        return pred_grasps, pred_conf

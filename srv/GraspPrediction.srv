@@ -1,5 +1,5 @@
 geometry_msgs/Pose cam_pose
-std_msgs/Float32MultiArray cam_intrinsics
+float64[9] cam_intrinsics
 sensor_msgs/Image depth
 sensor_msgs/Image rgb
 ---
